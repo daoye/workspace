@@ -4,6 +4,10 @@ vim.g.maplocalleader = " "
 
 -- coc or lsp
 vim.g.usecoc = true
+vim.g.coc_config_home = '~/.config/nvim'
+-- disable backup file, coc need this
+vim.opt.backup = false
+vim.opt.writebackup = false
 
 -- vim.g.loaded_netrw = true
 -- vim.g.loaded_netrwPlugin = true
