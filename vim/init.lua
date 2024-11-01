@@ -63,6 +63,9 @@ opt.foldlevel = 99
 vim.foldlevelstart = 99
 opt.foldenable = true
 
+-- opt.foldmethod = "expr"
+-- opt.foldexpr = "CocAction('fold')"
+
 -- opt.splitkeep = "screen"
 -- opt.shortmess:append({ C = true })
 

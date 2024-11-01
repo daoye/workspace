@@ -175,7 +175,8 @@ M.setup = function(opts)
     opts = opts or {}
     vim.g.coc_global_extensions = {
         -- "coc-highlight",
-        "coc-lua",
+        "coc-sumneko-lua",
+        -- "coc-lua",
         "coc-snippets",
         "coc-json",
         "coc-tsserver",
