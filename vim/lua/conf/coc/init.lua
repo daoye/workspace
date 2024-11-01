@@ -3,6 +3,20 @@ local utils = require("utils")
 
 local M = {}
 
+function _G.check_back_space()
+    local col = vim.fn.col(".") - 1
+    return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
+end
+
+function _G.coc_has_provider(method)
+    if method then
+        return vim.fn.CocHasProvider(method)
+    end
+    return true
+end
+
+local cocAction = vim.fn['CocAction']
+
 -- Use K to show documentation in preview window
 local function show_docs()
     local cw = vim.fn.expand("<cword>")
@@ -15,62 +29,103 @@ local function show_docs()
     end
 end
 
-function _G.check_back_space()
-    local col = vim.fn.col(".") - 1
-    return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
+
+local function close_float()
+    if vim.api.nvim_eval("coc#float#has_float()") then
+        vim.api.nvim_eval("coc#float#close_all()")
+    else
+        vim.api.nvim_eval("<esc>")
+    end
 end
 
+local function openLink()
+    local res = cocAction("openLink")
+    if res then
+        return
+    end
+
+    local line = vim.fn.getline(".")
+    local url = line:match("https?://[^%s%)]+")
+
+    if url then
+        vim.fn.system("open " .. url)
+    else
+        local email = line:match("[A-Za-z0-9_%.%-]+@[A-Za-z0-9_%.%-]+%.[a-z]+")
+        if email then
+            vim.fn.system("open mailto:" .. email)
+        else
+            vim.fn.system("open " .. vim.fn.expand("%:p:h"))
+        end
+    end
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_err_writeln("Error: Could not open link")
+    end
+end
+
+
+
 local keyset = vim.keymap.set
-local keymap = vim.api.nvim_set_keymap
+-- local keymap = vim.api.nvim_set_keymap
 
 ---@param method string|string[]
 local function has(buffer, method)
+    -- if not method then
+    --     return vim.fn.CocHasProvider(method)
+    -- end
     return true
 end
 
-local function lsp_maps()
+local function augroup(name)
+    return vim.api.nvim_create_augroup("my_" .. name, { clear = true })
+end
+
+local function lsp_maps(bufnr)
     local maps = {
-        { "gd",         "<cmd>Telescope coc definitions<cr>",  desc = "Goto Definition", has = "definition" },
-        { "<leader>lr", "<cmd>Telescope coc references<cr>",   desc = "References" },
-        { "<leader>gd", "<cmd>Telescope coc declarations<cr>", desc = "Goto Declaration" },
+        { "gd",                 "<cmd>Telescope coc definitions<cr>",           desc = "Goto Definition",       silent = true,       has = "definition" },
+        { "<leader>lr",         "<cmd>Telescope coc references<cr>",            desc = "References" },
+        { "<leader>gd",         "<cmd>Telescope coc declarations<cr>",          desc = "Goto Declaration" },
+        { "<leader>gd",         "<Plug>(coc-definition)<cr>",                   desc = "Goto Declaration", },
+        { "gi",                 "<cmd>Telescope coc implementations<cr>",       desc = "Goto Implementation" },
+        { "gy",                 "<cmd>Telescope coc type_definitions<cr>",      desc = "Goto T[y]pe Definition" },
+        { "K",                  show_docs,                                      desc = "Hover" },
+        { "<esc>",              close_float,                                    desc = "Close popup" },
+        { "<leader>fs",         "<Plug>(coc-format)<cr>",                       desc = "Format",                mode = { "n", "x" }, },
+        { "<leader>fs",         "<Plug>(coc-format-selected)<cr>",              desc = "ange format",           mode = { "v" }, },
+        { "<leader>la",         "<cmd>Telescope coc line_code_actions<cr>",     desc = "Code Action",           mode = { "n", "v" }, silent = true,                    has = "codeAction", },
+        { "<leader><leader>la", "<cmd>Telescope coc file_code_actions<cr>",     desc = "Code Action",           mode = { "n", "v" }, silent = true,                    has = "codeAction", },
+        { "<leader>ls",         "<cmd>Telescope coc document_symbols<cr>",      mode = { "n", "v" },            silent = true,       desc = "Goto Symbol", },
+        { "<leader><leader>ls", "<cmd>Telescope coc workspace_symbols<cr>",     mode = { "n", "v" },            silent = true,       desc = "Goto Symbol (Workspace)", },
+
+        { "<leader>fd",         "<cmd>Telescope coc diagnostics<cr>",           desc = "Document diagnostics" },
+        { "<leader><leader>fd", "<cmd>Telescope coc workspace_diagnostics<cr>", desc = "Workspace diagnostics" },
+
         {
-            "<leader>gd",
-            "<Plug>(coc-definition)<cr>",
+            "<C-u>",
+            -- 'v:lua.has_floating_window() ? coc#float#scroll(0) : "<C-u>"',
+            'coc#float#has_float() ? coc#float#scroll(0) : "<C-u>"',
             silent = true,
-            desc = "Goto Declaration",
-        },
-        { "gi", "<cmd>Telescope coc implementations<cr>",  desc = "Goto Implementation" },
-        { "gy", "<cmd>Telescope coc type_definitions<cr>", desc = "Goto T[y]pe Definition" },
-        { "K",  show_docs,                                 silent = true,                  desc = "Hover" },
-        {
-            "<c-k>",
-            "<Plug>CocActionAsync('showSignatureHelp')<cr>",
-            mode = "i",
-            desc = "Signature Help",
-            has = "signatureHelp",
+            expr = true,
+            mode = { "n", "i", "o" },
+            desc = "Scroll forward"
         },
         {
-            "<leader>fs",
-            "<Plug>(coc-format-selected)<cr>",
-            desc = "Format / Range format",
-            mode = { "n", "v" },
+            "<C-d>",
+            'coc#float#has_float() ? coc#float#scroll(1) : "<C-d>"',
+            -- 'v:lua.has_floating_window() ?  coc#float#scroll(1) : "<C-d>"',
+            silent = true,
+            expr = true,
+            mode = { "n", "i", "o" },
+            desc = "Scroll backward"
         },
-        {
-            "la",
-            "<cmd>Telescope coc line_code_actions<cr>",
-            desc = "Code Action",
-            mode = { "n", "v" },
-            has = "codeAction",
-        },
-        {
-            "<leader>la",
-            "<cmd>Telescope coc file_code_actions<cr>",
-            desc = "Code Action",
-            mode = { "n", "v" },
-            has = "codeAction",
-        },
-        { "<leader>rn", "<Plug>(coc-rename)", desc = "Rename", has = "rename" },
+        { "<leader>o",  openLink,                 silent = true, mode = { "n", },     desc = "Open link under cursor" },
+
+        { "<leader>rn", "<Plug>(coc-rename)",     silent = true, desc = "Rename",     has = "rename" },
+        { "if",         "<Plug>(coc-funcobj-i)",  silent = true, mode = { "x", "o" }, has = "documentSymbol" },
+        { "af",         "<Plug>(coc-funcobj-a)",  silent = true, mode = { "x", "o" }, has = "documentSymbol" },
+        { "ic",         "<Plug>(coc-classobj-i)", silent = true, mode = { "x", "o" }, has = "documentSymbol" },
+        { "ac",         "<Plug>(coc-classobj-a)", silent = true, mode = { "x", "o" }, has = "documentSymbol" },
     }
+
 
     local keyHandler = require("lazy.core.handler.keys")
     local keymaps = keyHandler.resolve(maps)
@@ -91,7 +146,7 @@ local function lsp_maps()
     end
 end
 
-local function complition_maps()
+local function super_tab()
     local opts = { silent = true, noremap = true, expr = true, replace_keycodes = false }
 
     keyset(
@@ -107,69 +162,75 @@ local function complition_maps()
     keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
     -- Use <c-j> to trigger snippets
-    keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+    -- keyset("i", "<c-j>", '<Plug>(coc-snippets-expand-jump)', {silent = true, expr=true})
+    -- vim.keymap.set("i", "<c-j>", [[<Plug>(coc-snippets-expand-jump)]], opts)
     -- Use <c-space> to trigger completion
     -- keyset("i", "<BS>", "coc#refresh()", { silent = true, expr = true })
-
-    -- NOTE: Requires 'textDocument.documentSymbol' support from the language server
-    keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
-    keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
-    keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
-    keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
-    keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
-    keyset("o", "ic", "<Plug>(coc-classobj-i)", opts)
-    keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
-    keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
+    --
 
     -- Remap <C-f> and <C-b> to scroll float windows/popups
     ---@diagnostic disable-next-line: redefined-local
-    local opts = { silent = true, nowait = true, expr = true }
-    keyset("n", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
-    keyset("n", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
-    keyset("i", "<C-u>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-    keyset("i", "<C-d>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-    keyset("v", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
-    keyset("v", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
-end
-
-local function autocmd()
-    -- Highlight the symbol and its references on a CursorHold event(cursor is idle)
-    vim.api.nvim_create_augroup("CocGroup", {})
-    vim.api.nvim_create_autocmd("CursorHold", {
-        group = "CocGroup",
-        command = "silent call CocActionAsync('highlight')",
-        desc = "Highlight symbol under cursor on CursorHold",
-    })
-
-    -- Setup formatexpr specified filetype(s)
-    -- vim.api.nvim_create_autocmd("FileType", {
-    --     group = "CocGroup",
-    --     pattern = "typescript,reacttypescript,json",
-    --     command = "setl formatexpr=CocAction('formatSelected')",
-    --     desc = "Setup formatexpr specified filetype(s).",
-    -- })
-
-    -- Update signature help on jump placeholder
-    vim.api.nvim_create_autocmd("User", {
-        group = "CocGroup",
-        pattern = "CocJumpPlaceholder",
-        command = "call CocActionAsync('showSignatureHelp')",
-        desc = "Update signature help on jump placeholder",
-    })
+    -- local opts = { silent = true, nowait = true, expr = true }
+    -- keyset("n", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
+    -- keyset("n", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
+    -- keyset("i", "<C-u>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
+    -- keyset("i", "<C-d>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
+    -- keyset("v", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
+    -- keyset("v", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
 end
 
 M.setup = function(opts)
     opts = opts or {}
     vim.g.coc_global_extensions = {
+        -- "coc-highlight",
+        -- "coc-sumneko-lua",
+        "coc-lua",
+        "coc-snippets",
         "coc-json",
         "coc-tsserver",
+        -- "coc-css",
+        -- "coc-html",
+        -- "coc-html-css-support",
+        -- "coc-flutter",
+        -- "coc-prettier",
+        -- "coc-sh",
+        -- "coc-tailwindcss3",
     }
 
-    autocmd()
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "CocNvimInit",
+        group = augroup("cocnviminit"),
+        callback = function()
+            -- local bufnr = vim.api.nvim_get_current_buf()
 
-    lsp_maps()
+            vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", { nargs = '?' })
 
-    complition_maps()
+            lsp_maps(nil)
+
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "CocStatusChange",
+                group = augroup("cocstatuschange"),
+                callback = function()
+                    if package.loaded['lualine'] then
+                        require('lualine').refresh({ place = { 'statusline' } })
+                    end
+                end,
+            })
+
+            vim.api.nvim_create_autocmd("BufReadPost", {
+                group = augroup("autofold"),
+                callback = function()
+                    if cocAction('hasProvider', 'foldingRange') then
+                        cocAction('fold')
+                        vim.api.nvim_eval("<zR>")
+                    end
+                end,
+            })
+        end,
+    })
+
+
+    super_tab()
 end
 
 return M

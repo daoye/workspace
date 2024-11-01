@@ -1,14 +1,16 @@
-if vim.g.usecoc then
-    return {}
-end
-
 return {
     {
         "williamboman/mason.nvim",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         config = true,
     },
     {
         "williamboman/mason-lspconfig.nvim",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         dependencies = {
             "williamboman/mason.nvim",
         },
@@ -16,6 +18,9 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         lazy = false,
         dependencies = {
             "williamboman/mason.nvim",
@@ -40,8 +45,13 @@ return {
     -- auto completion
     {
         'hrsh7th/nvim-cmp',
+        cond = function()
+            return not vim.g.usecoc
+        end,
         dependencies = {
-            'hrsh7th/cmp-nvim-lsp',
+            {
+                'hrsh7th/cmp-nvim-lsp',
+            },
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-cmdline',
@@ -75,6 +85,9 @@ return {
     -- formater, lints
     {
         "nvimtools/none-ls.nvim",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         config = function()
             local null_ls = require("null-ls")
 
@@ -95,11 +108,17 @@ return {
     -- csharp
     {
         "Decodetalkers/csharpls-extended-lsp.nvim",
+        cond = function()
+            return not vim.g.usecoc
+        end,
     },
 
     -- lua
     {
         "folke/lazydev.nvim",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         ft = "lua", -- only load on lua files
         opts = {
             library = {
@@ -109,11 +128,21 @@ return {
             },
         },
     },
-    { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+    {
+        "Bilal2453/luvit-meta",
+
+        cond = function()
+            return not vim.g.usecoc
+        end,
+        lazy = true
+    }, -- optional `vim.uv` typings
 
     -- fold
     {
         "kevinhwang91/nvim-ufo",
+        cond = function()
+            return not vim.g.usecoc
+        end,
         -- enabled = false,
         dependencies = {
             "kevinhwang91/promise-async",

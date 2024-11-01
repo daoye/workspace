@@ -33,6 +33,15 @@ local function toggle(option, silent, values)
     end
 end
 
+local function is_quickfix_open()
+    for _, win in ipairs(vim.fn.getwininfo()) do
+        if win.quickfix == 1 then
+            return true
+        end
+    end
+    return false
+end
+
 -- better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -98,6 +107,7 @@ map("n", "<leader>w|", "<C-W>v", { desc = "Split window right" })
 map("n", "<leader>-", "<C-W>s", { desc = "Split window below" })
 map("n", "<leader>|", "<C-W>v", { desc = "Split window right" })
 
+
 -- tabs
 map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
 map("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
@@ -105,3 +115,26 @@ map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
 map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+
+-- quickfix
+vim.keymap.set("n", "<C-n>", function()
+    if is_quickfix_open() then
+        if vim.fn.getqflist({ idx = 0 }).idx == #vim.fn.getqflist() then
+            return "<cmd>cfirst<cr>"
+        end
+        return "<cmd>cn<cr>"
+    else
+        return "<C-n>"
+    end
+end, { noremap = true, silent = true, expr = true })
+
+vim.keymap.set("n", "<C-p>", function()
+    if is_quickfix_open() then
+        if vim.fn.getqflist({ idx = 0 }).idx == 1 then
+            return "<cmd>clast<cr>"
+        end
+        return "<cmd>cp<cr>"
+    else
+        return "<C-p>"
+    end
+end, { noremap = true, silent = true, expr = true })

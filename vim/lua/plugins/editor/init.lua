@@ -252,76 +252,41 @@ return {
                     require("telescope").load_extension("fzf")
                 end,
             },
+            {
+                "fannheyward/telescope-coc.nvim",
+                cond = vim.g.usecoc
+            }
         },
         keys = {
-            { "<leader>fg",         M.telescope("live_grep"),                                  desc = "Grep (root dir)" },
-            { "<leader>fG",         M.telescope("live_grep", { cwd = false }),                 desc = "Grep (cwd)" },
-            { "<leader>:",          "<cmd>Telescope command_history<cr>",                      desc = "Command History" },
-            { "<leader><space>",    M.telescope("files"),                                      desc = "Find Files (root dir)" },
+            { "<leader>fg",      M.telescope("live_grep"),                                  desc = "Grep (root dir)" },
+            { "<leader>fG",      M.telescope("live_grep", { cwd = false }),                 desc = "Grep (cwd)" },
+            { "<leader>:",       "<cmd>Telescope command_history<cr>",                      desc = "Command History" },
+            { "<leader><space>", M.telescope("files"),                                      desc = "Find Files (root dir)" },
             -- find
-            { "<leader>fb",         "<cmd>Telescope buffers<cr>",                              desc = "Buffers" },
-            { "<leader>ff",         M.telescope("files"),                                      desc = "Find Files (root dir)" },
-            { "<leader>fF",         M.telescope("find_files"),                                 desc = "Find All Files (root dir)" },
-            { "<leader>fr",         "<cmd>Telescope oldfiles<cr>",                             desc = "Recent" },
-            { "<leader>fR",         M.telescope("oldfiles", { cwd = vim.loop.cwd() }),         desc = "Recent (cwd)" },
-            { "<leader>fk",         "<cmd>Telescope keymaps<cr>",                              desc = "Keymaps" },
-            { "<leader>f?",         "<cmd>Telescope help_tags<cr>",                            desc = "Help" },
-            { "<leader>fw",         M.telescope("grep_string"),                                desc = "Word (root dir)" },
-            { "<leader>fW",         M.telescope("grep_string", { cwd = false }),               desc = "Word (cwd)" },
-            { "<leader>fd",         "<cmd>Telescope diagnostics bufnr=0<cr>",                  desc = "Document diagnostics" },
-            { "<leader><leader>fd", "<cmd>Telescope diagnostics<cr>",                          desc = "Workspace diagnostics" },
-            { "<leader>fm",         "<cmd>Telescope marks<cr>",                                desc = "Jump to Mark" },
-            { "<space>ff",          "<cmd>Telescope current_buffer_fuzzy_find fuzzy=true<cr>", desc = "Search in currentfile",    mode = { "n", "v" }, },
+            { "<leader>fb",      "<cmd>Telescope buffers<cr>",                              desc = "Buffers" },
+            { "<leader>ff",      M.telescope("files"),                                      desc = "Find Files (root dir)" },
+            { "<leader>fF",      M.telescope("find_files"),                                 desc = "Find All Files (root dir)" },
+            { "<leader>fr",      "<cmd>Telescope oldfiles<cr>",                             desc = "Recent" },
+            { "<leader>fR",      M.telescope("oldfiles", { cwd = vim.loop.cwd() }),         desc = "Recent (cwd)" },
+            { "<leader>fk",      "<cmd>Telescope keymaps<cr>",                              desc = "Keymaps" },
+            { "<leader>f?",      "<cmd>Telescope help_tags<cr>",                            desc = "Help" },
+            { "<leader>fw",      M.telescope("grep_string"),                                desc = "Word (root dir)" },
+            { "<leader>fW",      M.telescope("grep_string", { cwd = false }),               desc = "Word (cwd)" },
+            { "<leader>fm",      "<cmd>Telescope marks<cr>",                                desc = "Jump to Mark" },
+            { "<space>ff",       "<cmd>Telescope current_buffer_fuzzy_find fuzzy=true<cr>", desc = "Search in currentfile",    mode = { "n", "v" }, },
             -- git
-            { "<leader>gc",         "<cmd>Telescope git_commits<CR>",                          desc = "commits" },
-            { "<leader>gs",         "<cmd>Telescope git_status<CR>",                           desc = "status" },
+            { "<leader>gc",      "<cmd>Telescope git_commits<CR>",                          desc = "commits" },
+            { "<leader>gs",      "<cmd>Telescope git_status<CR>",                           desc = "status" },
             -- search
-            { "<leader>sa",         "<cmd>Telescope autocommands<cr>",                         desc = "Auto Commands" },
-            { "<leader>sc",         "<cmd>Telescope command_history<cr>",                      desc = "Command History" },
-            { "<leader>sC",         "<cmd>Telescope commands<cr>",                             desc = "Commands" },
-            { "<leader>sh",         "<cmd>Telescope help_tags<cr>",                            desc = "Help Pages" },
-            { "<leader>sH",         "<cmd>Telescope highlights<cr>",                           desc = "Search Highlight Groups", },
-            { "<leader>sk",         "<cmd>Telescope keymaps<cr>",                              desc = "Key Maps" },
-            { "<leader>sM",         "<cmd>Telescope man_pages<cr>",                            desc = "Man Pages" },
-            { "<leader>so",         "<cmd>Telescope vim_options<cr>",                          desc = "Options" },
-            { "<leader>sR",         "<cmd>Telescope resume<cr>",                               desc = "Resume" },
-
-            {
-                "<leader>ls",
-                M.telescope("lsp_document_symbols", {
-                    symbols = {
-                        "Class",
-                        "Function",
-                        "Method",
-                        "Constructor",
-                        "Interface",
-                        "Module",
-                        "Struct",
-                        "Trait",
-                        "Field",
-                        "Property",
-                    },
-                }),
-                desc = "Goto Symbol",
-            },
-            {
-                "<leader><leader>ls",
-                M.telescope("lsp_dynamic_workspace_symbols", {
-                    symbols = {
-                        "Class",
-                        "Function",
-                        "Method",
-                        "Constructor",
-                        "Interface",
-                        "Module",
-                        "Struct",
-                        "Trait",
-                        "Field",
-                        "Property",
-                    },
-                }),
-                desc = "Goto Symbol (Workspace)",
-            },
+            { "<leader>sa",      "<cmd>Telescope autocommands<cr>",                         desc = "Auto Commands" },
+            { "<leader>sc",      "<cmd>Telescope command_history<cr>",                      desc = "Command History" },
+            { "<leader>sC",      "<cmd>Telescope commands<cr>",                             desc = "Commands" },
+            { "<leader>sh",      "<cmd>Telescope help_tags<cr>",                            desc = "Help Pages" },
+            { "<leader>sH",      "<cmd>Telescope highlights<cr>",                           desc = "Search Highlight Groups", },
+            { "<leader>sk",      "<cmd>Telescope keymaps<cr>",                              desc = "Key Maps" },
+            { "<leader>sM",      "<cmd>Telescope man_pages<cr>",                            desc = "Man Pages" },
+            { "<leader>so",      "<cmd>Telescope vim_options<cr>",                          desc = "Options" },
+            { "<leader>sR",      "<cmd>Telescope resume<cr>",                               desc = "Resume" },
         },
         opts = function(p, opts)
             return vim.tbl_deep_extend("force", opts or {}, {
@@ -391,6 +356,11 @@ return {
                         case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
                         -- the default case_mode is "smart_case"
                     },
+                    coc = {
+                        prefer_locations = false,
+                        push_cursor_on_edit = true,
+                        timeout = 3000,
+                    },
                 },
             })
         end,
@@ -404,6 +374,7 @@ return {
             'SmiteshP/nvim-navic',
             {
                 'linrongbin16/lsp-progress.nvim',
+                cond = not vim.g.usecoc,
                 config = true,
             }
         },
@@ -431,7 +402,14 @@ return {
                         cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
                     },
                     function()
+                        if vim.g.usecoc then
+                            return vim.g.coc_status:gsub("%%", "%%%%")
+                            -- return vim.fn["coc#status"](true)
+                        end
                         return require('lsp-progress').progress()
+                    end,
+                    function()
+                        return require('extensions/message').get_status_summary()
                     end,
                     { "diff" },
                 },
@@ -595,7 +573,7 @@ return {
         end,
         opts = {
             mappings = {
-                add = "ys",            -- Add surrounding in Normal and Visual modes
+                add = "as",            -- Add surrounding in Normal and Visual modes
                 delete = "ds",         -- Delete surrounding
                 find = "fs",           -- Find surrounding (to the right)
                 find_left = "Fs",      -- Find surrounding (to the left)
@@ -606,22 +584,31 @@ return {
         },
     },
 
-    -- {
-    --     'windwp/nvim-autopairs',
-    --     event = "InsertEnter",
-    --     config = true,
-    -- },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true,
+    },
 
     -- auto tag
     {
         "windwp/nvim-ts-autotag",
         config = true
     },
-
     { "tpope/vim-repeat", event = "VeryLazy" },
-
     {
         "christoomey/vim-tmux-navigator",
         lazy = false,
+    },
+    {
+        dir = "extensions/message",
+        lazy = false,
+
+        keys = {
+            { "<leader>m", mode = { "n", "x", "o" }, function() require("extensions/message").open_message_float() end, desc = "Show message window" },
+        },
+        config = function()
+            require("extensions/message").setup()
+        end,
     },
 }

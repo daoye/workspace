@@ -1,5 +1,6 @@
 local lspconfig = require("lspconfig")
 local navic = require("nvim-navic")
+local telescope = require("telescope.builtin")
 
 local M = {}
 
@@ -22,11 +23,11 @@ local function get()
             desc = "Goto Definition",
             has = "definition",
         },
-        { "<leader>lr", "<cmd>Telescope lsp_references<cr>", desc = "References" },
-        { "<leader>gd", vim.lsp.buf.declaration, desc = "Goto Declaration" },
-        { "gi", "<cmd>Telescope lsp_implementations<cr>", desc = "Goto Implementation" },
-        { "gy", "<cmd>Telescope lsp_type_definitions<cr>", desc = "Goto T[y]pe Definition" },
-        { "K", vim.lsp.buf.hover, desc = "Hover" },
+        { "<leader>lr", "<cmd>Telescope lsp_references<cr>",       desc = "References" },
+        { "<leader>gd", vim.lsp.buf.declaration,                   desc = "Goto Declaration" },
+        { "gi",         "<cmd>Telescope lsp_implementations<cr>",  desc = "Goto Implementation" },
+        { "gy",         "<cmd>Telescope lsp_type_definitions<cr>", desc = "Goto T[y]pe Definition" },
+        { "K",          vim.lsp.buf.hover,                         desc = "Hover" },
         {
             "<c-k>",
             vim.lsp.buf.signature_help,
@@ -65,7 +66,45 @@ local function get()
             mode = { "n", "v" },
             has = "codeAction",
         },
-        { "<leader>rn", vim.lsp.buf.rename, desc = "Rename", has = "rename" },
+        { "<leader>rn", vim.lsp.buf.rename, desc = "Rename",                has = "rename" },
+        {
+            "<leader>ls",
+            telescope["lsp_document_symbols"]({
+                symbols = {
+                    "Class",
+                    "Function",
+                    "Method",
+                    "Constructor",
+                    "Interface",
+                    "Module",
+                    "Struct",
+                    "Trait",
+                    "Field",
+                    "Property",
+                },
+            }),
+            desc = "Goto Symbol",
+        },
+        {
+            "<leader><leader>ls",
+            telescope["lsp_dynamic_workspace_symbols"]({
+                symbols = {
+                    "Class",
+                    "Function",
+                    "Method",
+                    "Constructor",
+                    "Interface",
+                    "Module",
+                    "Struct",
+                    "Trait",
+                    "Field",
+                    "Property",
+                },
+            }),
+            desc = "Goto Symbol (Workspace)",
+        },
+        { "<leader>fd",         "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Document diagnostics" },
+        { "<leader><leader>fd", "<cmd>Telescope diagnostics<cr>",         desc = "Workspace diagnostics" },
     }
 
     return M._keys

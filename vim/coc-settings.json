@@ -1,4 +1,12 @@
 {
-    "suggest.autoTrigger": "always",
-    "suggest.noselect": true
+  "Lua.workspace.library": ["${userHome}/.local/share/nvim/lazy/"],
+  "Lua.diagnostics.globals": [
+    "hs",
+    "vim",
+
+    "it",
+    "describe",
+    "before_each",
+    "after_each"
+  ]
 }

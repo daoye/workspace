@@ -54,6 +54,7 @@ vim.api.nvim_create_autocmd("FileType", {
         "checkhealth",
         "dap-repl",
         "grug-far",
+        "Bot",
     },
     callback = function(event)
         vim.bo[event.buf].buflisted = false
