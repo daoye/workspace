@@ -604,6 +604,66 @@ return {
         "christoomey/vim-tmux-navigator",
         lazy = false,
     },
+    -- fold
+    {
+        "kevinhwang91/nvim-ufo",
+        -- enabled = false,
+        dependencies = {
+            "kevinhwang91/promise-async",
+            {
+                "neovim/nvim-lspconfig",
+                cond = function()
+                    return not vim.g.usecoc
+                end,
+            },
+            {
+                "neoclide/coc.nvim",
+                cond = function()
+                    return vim.g.usecoc
+                end,
+            }
+        },
+        event = { "VeryLazy" },
+        opts = {
+            default = {
+                close_fold_kinds_for_ft = { "imports", "comment" },
+            },
+        },
+        keys = {
+            {
+                "zR",
+                function()
+                    require("ufo").openAllFolds()
+                end,
+                desc = "Open all folds",
+                mode = { "n" },
+            },
+            {
+                "zM",
+                function()
+                    require("ufo").closeAllFolds()
+                end,
+                desc = "Close all folds",
+                mode = { "n" },
+            },
+            {
+                "zr",
+                function()
+                    require("ufo").openFoldsExceptKinds()
+                end,
+                desc = "Open folds",
+                mode = { "n" },
+            },
+            {
+                "zM",
+                function()
+                    require("ufo").closeFoldsWith()
+                end,
+                desc = "Close folds",
+                mode = { "n" },
+            },
+        },
+    },
     {
         dir = "extensions/message",
         lazy = false,

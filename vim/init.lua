@@ -63,6 +63,7 @@ opt.foldlevel = 99
 vim.foldlevelstart = 99
 opt.foldenable = true
 
+-- opt.foldmethod = "indent"
 -- opt.foldmethod = "expr"
 -- opt.foldexpr = "CocAction('fold')"
 

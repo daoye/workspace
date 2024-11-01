@@ -14,7 +14,7 @@ function _G.coc_has_provider(method)
     return true
 end
 
-function _G.completion_confirm()
+function _G.coc_completion_confirm()
     if vim.fn["coc#pum#visible"]() ~= 0 then
         return vim.fn["coc#pum#confirm"]()
     elseif npairs then
@@ -104,7 +104,6 @@ local function lsp_maps(bufnr)
 
         {
             "<C-u>",
-            -- 'v:lua.has_floating_window() ? coc#float#scroll(0) : "<C-u>"',
             'coc#float#has_float() ? coc#float#scroll(0) : "<C-u>"',
             silent = true,
             expr = true,
@@ -114,13 +113,21 @@ local function lsp_maps(bufnr)
         {
             "<C-d>",
             'coc#float#has_float() ? coc#float#scroll(1) : "<C-d>"',
-            -- 'v:lua.has_floating_window() ?  coc#float#scroll(1) : "<C-d>"',
             silent = true,
             expr = true,
             mode = { "n", "i", "o" },
             desc = "Scroll backward"
         },
         { "<leader>o",  openLink,                 silent = true, mode = { "n", },     desc = "Open link under cursor" },
+
+        {
+            "<leader>cf",
+            "<cmd>Fold<cr>",
+            -- silent = true,
+            -- expr = true,
+            mode = { "n" },
+            desc = "Create fold"
+        },
 
         { "<leader>rn", "<Plug>(coc-rename)",     silent = true, desc = "Rename",     has = "rename" },
         { "if",         "<Plug>(coc-funcobj-i)",  silent = true, mode = { "x", "o" }, has = "documentSymbol" },
@@ -163,7 +170,7 @@ local function super_tab()
     -- Make <CR> to accept selected completion item or notify coc.nvim to format
     -- <C-g>u breaks current undo, please make your own choice
     -- keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-    keyset('i', '<cr>', 'v:lua.completion_confirm()', opts)
+    keyset('i', '<cr>', 'v:lua.coc_completion_confirm()', opts)
     -- Use <c-j> to trigger snippets
     -- keyset("i", "<c-j>", '<Plug>(coc-snippets-expand-jump)', {silent = true, expr=true})
     -- vim.keymap.set("i", "<c-j>", [[<Plug>(coc-snippets-expand-jump)]], opts)
