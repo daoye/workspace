@@ -1,5 +1,4 @@
-local navic = require("nvim-navic")
-local utils = require("utils")
+local npairs = require('nvim-autopairs')
 
 local M = {}
 
@@ -13,6 +12,14 @@ function _G.coc_has_provider(method)
         return vim.fn.CocHasProvider(method)
     end
     return true
+end
+
+function _G.completion_confirm()
+    if vim.fn["coc#pum#visible"]() ~= 0 then
+        return vim.fn["coc#pum#confirm"]()
+    elseif npairs then
+        return npairs.autopairs_cr()
+    end
 end
 
 local cocAction = vim.fn['CocAction']
@@ -65,13 +72,9 @@ end
 
 
 local keyset = vim.keymap.set
--- local keymap = vim.api.nvim_set_keymap
 
 ---@param method string|string[]
 local function has(buffer, method)
-    -- if not method then
-    --     return vim.fn.CocHasProvider(method)
-    -- end
     return true
 end
 
@@ -159,41 +162,29 @@ local function super_tab()
 
     -- Make <CR> to accept selected completion item or notify coc.nvim to format
     -- <C-g>u breaks current undo, please make your own choice
-    keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
+    -- keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+    keyset('i', '<cr>', 'v:lua.completion_confirm()', opts)
     -- Use <c-j> to trigger snippets
     -- keyset("i", "<c-j>", '<Plug>(coc-snippets-expand-jump)', {silent = true, expr=true})
     -- vim.keymap.set("i", "<c-j>", [[<Plug>(coc-snippets-expand-jump)]], opts)
     -- Use <c-space> to trigger completion
     -- keyset("i", "<BS>", "coc#refresh()", { silent = true, expr = true })
-    --
-
-    -- Remap <C-f> and <C-b> to scroll float windows/popups
-    ---@diagnostic disable-next-line: redefined-local
-    -- local opts = { silent = true, nowait = true, expr = true }
-    -- keyset("n", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
-    -- keyset("n", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
-    -- keyset("i", "<C-u>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-    -- keyset("i", "<C-d>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-    -- keyset("v", "<C-u>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-u>"', opts)
-    -- keyset("v", "<C-d>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-d>"', opts)
 end
 
 M.setup = function(opts)
     opts = opts or {}
     vim.g.coc_global_extensions = {
         -- "coc-highlight",
-        -- "coc-sumneko-lua",
         "coc-lua",
         "coc-snippets",
         "coc-json",
         "coc-tsserver",
-        -- "coc-css",
-        -- "coc-html",
-        -- "coc-html-css-support",
+        "coc-css",
+        "coc-html",
+        "coc-html-css-support",
         -- "coc-flutter",
         -- "coc-prettier",
-        -- "coc-sh",
+        "coc-sh",
         -- "coc-tailwindcss3",
     }
 
@@ -220,15 +211,14 @@ M.setup = function(opts)
             vim.api.nvim_create_autocmd("BufReadPost", {
                 group = augroup("autofold"),
                 callback = function()
-                    if cocAction('hasProvider', 'foldingRange') then
-                        cocAction('fold')
-                        vim.api.nvim_eval("<zR>")
-                    end
+                    -- if cocAction('hasProvider', 'foldingRange') then
+                    --     cocAction('fold')
+                    --     vim.api.nvim_eval("<zR>")
+                    -- end
                 end,
             })
         end,
     })
-
 
     super_tab()
 end

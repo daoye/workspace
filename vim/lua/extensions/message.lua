@@ -18,9 +18,9 @@ M.opts = {
         INFO = "MoreMsg"
     },
     icons = {
-        ERROR = "🔴 ",
-        WARN = "🟠 ",
-        INFO = "⚪ "
+        ERROR = "E ",
+        WARN = "W ",
+        INFO = "I "
     }
 }
 

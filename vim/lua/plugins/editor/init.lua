@@ -404,6 +404,7 @@ return {
                     function()
                         if vim.g.usecoc then
                             return vim.g.coc_status:gsub("%%", "%%%%")
+
                             -- return vim.fn["coc#status"](true)
                         end
                         return require('lsp-progress').progress()
@@ -586,7 +587,10 @@ return {
 
     {
         'windwp/nvim-autopairs',
-        event = "InsertEnter",
+        event  = "InsertEnter",
+        opts   = {
+            map_cr = false
+        },
         config = true,
     },
 
@@ -603,12 +607,18 @@ return {
     {
         dir = "extensions/message",
         lazy = false,
-
         keys = {
-            { "<leader>m", mode = { "n", "x", "o" }, function() require("extensions/message").open_message_float() end, desc = "Show message window" },
+            {
+                "<leader>m",
+                mode = { "n", "x", "o" },
+                function()
+                    require("extensions/message").open_message_float()
+                end,
+                desc = "Show message window"
+            },
         },
-        config = function()
-            require("extensions/message").setup()
+        config = function(opts)
+            require("extensions/message").setup(opts)
         end,
     },
 }
