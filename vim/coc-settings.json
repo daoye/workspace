@@ -1,15 +1,13 @@
 {
-    "colors.enable": true,
-    "sumneko-lua.enableNvimLuaDev": true,
-    "Lua.workspace.library": [
-        "${userHome}/.local/share/nvim/lazy/"
-    ],
-    "Lua.diagnostics.globals": [
-        "hs",
-        "vim",
-        "it",
-        "describe",
-        "before_each",
-        "after_each"
-    ]
+  "colors.enable": true,
+  "sumneko-lua.enableNvimLuaDev": true,
+  "Lua.workspace.library": ["${userHome}/.local/share/nvim/lazy/"],
+  "Lua.diagnostics.globals": [
+    "hs",
+    "vim",
+    "it",
+    "describe",
+    "before_each",
+    "after_each"
+  ]
 }
