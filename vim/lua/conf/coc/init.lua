@@ -122,9 +122,9 @@ local function lsp_maps(bufnr)
 
         {
             "<leader>cf",
-            "<cmd>Fold<cr>",
+            "CocAction('fold')",
             -- silent = true,
-            -- expr = true,
+            expr = true,
             mode = { "n" },
             desc = "Create fold"
         },
@@ -181,19 +181,19 @@ end
 M.setup = function(opts)
     opts = opts or {}
     vim.g.coc_global_extensions = {
-        -- "coc-highlight",
+        "coc-highlight",
         "coc-sumneko-lua",
-        -- "coc-lua",
         "coc-snippets",
         "coc-json",
         "coc-tsserver",
         "coc-css",
         "coc-html",
         "coc-html-css-support",
-        -- "coc-flutter",
-        -- "coc-prettier",
+        "coc-flutter",
+        "coc-prettier",
         "coc-sh",
-        -- "coc-tailwindcss3",
+        "coc-lists",
+        "@yaegassy/coc-tailwindcss3",
     }
 
     vim.api.nvim_create_autocmd("User", {

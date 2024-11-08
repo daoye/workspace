@@ -109,9 +109,7 @@ local function setup_debugging()
 
         local co = coroutine.wrap(function()
             local root = find_project_root()
-            print('root', root)
             local csproj_files = find_csproj_files(root)
-            print('cs files', vim.inspect(csproj_files))
 
             if #csproj_files == 0 then
                 put("No .csproj files found in the project.\n")

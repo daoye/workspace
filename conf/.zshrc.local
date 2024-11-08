@@ -2,7 +2,7 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export PATH=$HOME/Library/Python/3.9/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:/usr/local/opt/llvm/bin:$HOME/go/bin:$HOME/.local/bin:/usr/local/bin:$PATH 
 
-export GEM_HOME=$HOME/.gem
+# export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
 
 export BAT_THEME="Catppuccin-latte"

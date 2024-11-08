@@ -35,22 +35,24 @@ local clear = function()
 end
 
 
-local original_notify = vim.notify
-vim.notify = function(msg, level, opts)
-    local level_str = vim.log.levels[level] == vim.log.levels.ERROR and "ERROR" or
-        vim.log.levels[level] == vim.log.levels.WARN and "WARN" or "INFO"
 
-    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-    table.insert(messages[level_str], { msg = msg, time = timestamp })
+-- local original_notify = vim.notify
+-- vim.notify = function(msg, level, opts)
+--     print(1111)
+--     local level_str = vim.log.levels[level] == vim.log.levels.ERROR and "ERROR" or
+--         vim.log.levels[level] == vim.log.levels.WARN and "WARN" or "INFO"
 
-    if package.loaded['lualine'] then
-        require('lualine').refresh({ place = { 'statusline' } })
-    end
+--     local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+--     table.insert(messages[level_str], { msg = msg, time = timestamp })
 
-    if not M.opts.intercept_levels[level_str] then
-        original_notify(msg, level, opts)
-    end
-end
+--     if package.loaded['lualine'] then
+--         require('lualine').refresh({ place = { 'statusline' } })
+--     end
+
+--     if not M.opts.intercept_levels[level_str] then
+--         original_notify(msg, level, opts)
+--     end
+-- end
 
 function M.get_status_summary()
     local status = ""

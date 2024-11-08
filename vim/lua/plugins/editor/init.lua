@@ -153,6 +153,45 @@ return {
             end
         end,
     },
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        cond = false,
+        opts = {
+            messages  = {
+                enabled = true, -- 使插件可以捕获所有信息，包括错误
+                view = "mini",  -- 将信息显示在状态栏
+            },
+            cmdline   = {
+                enabled = true,
+            },
+            popupmenu = {
+                enabled = false,
+            },
+            presets   = {
+                bottom_search = true,         -- use a classic bottom cmdline for search
+                command_palette = false,      -- position the cmdline and popupmenu together
+                long_message_to_split = true, -- long messages will be sent to a split
+                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+                lsp_doc_border = false,       -- add a border to hover docs and signature help
+            },
+        },
+        dependencies = {
+            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+            "MunifTanjim/nui.nvim",
+            -- OPTIONAL:
+            --   `nvim-notify` is only needed, if you want to use the notification view.
+            --   If not available, we use `mini` as the fallback
+            -- "rcarriga/nvim-notify",
+        },
+        keys = {
+            {
+                "<leader>m",
+                "<cmd>messages<cr>",
+                desc = "Show all messages",
+            }
+        }
+    },
 
     -- file explorer
     {
@@ -574,13 +613,13 @@ return {
         end,
         opts = {
             mappings = {
-                add = "as",            -- Add surrounding in Normal and Visual modes
+                add = "zs",            -- Add surrounding in Normal and Visual modes
                 delete = "ds",         -- Delete surrounding
-                find = "fs",           -- Find surrounding (to the right)
-                find_left = "Fs",      -- Find surrounding (to the left)
-                highlight = "hs",      -- Highlight surrounding
+                -- find = "fs",           -- Find surrounding (to the right)
+                -- find_left = "Fs",      -- Find surrounding (to the left)
+                -- highlight = "hs",      -- Highlight surrounding
                 replace = "cs",        -- Replace surrounding
-                update_n_lines = "ns", -- Update `n_lines`
+                -- update_n_lines = "ns", -- Update `n_lines`
             },
         },
     },
@@ -664,21 +703,47 @@ return {
             },
         },
     },
-    {
-        dir = "extensions/message",
-        lazy = false,
-        keys = {
-            {
-                "<leader>m",
-                mode = { "n", "x", "o" },
-                function()
-                    require("extensions/message").open_message_float()
-                end,
-                desc = "Show message window"
-            },
-        },
-        config = function(opts)
-            require("extensions/message").setup(opts)
-        end,
-    },
+    -- {
+    --     "gelguy/wilder.nvim",
+    --     event = "VeryLazy",
+    --     cond = false,
+    --     build = function()
+    --         vim.cmd("UpdateRemotePlugins");
+    --     end,
+    --     dependencies = {
+    --         'roxma/nvim-yarp',
+    --         'roxma/vim-hug-neovim-rpc',
+    --     },
+    --     config = function()
+    --         local wilder = require('wilder')
+    --         wilder.setup({ modes = { ':', '/', '?' } })
+    --         wilder.set_option('renderer', wilder.popupmenu_renderer(
+    --             wilder.popupmenu_border_theme({
+    --                 highlighter = wilder.basic_highlighter(),
+    --                 min_width = '100%', -- minimum height of the popupmenu, can also be a number
+    --                 min_height = '50%', -- to set a fixed height, set max_height to the same value
+    --                 reverse = 0,        -- if 1, shows the candidates from bottom to top
+    --                 left = { ' ', wilder.popupmenu_devicons() },
+    --                 right = { ' ', wilder.popupmenu_scrollbar() },
+    --             })
+    --         ))
+    --     end
+    -- },
+    -- {
+    --     dir = "extensions/message",
+    --     lazy = false,
+    --     keys = {
+    --         {
+    --             "<leader>m",
+    --             mode = { "n", "x", "o" },
+    --             function()
+    --                 require("extensions/message").open_message_float()
+    --             end,
+    --             desc = "Show message window"
+    --         },
+    --     },
+    --     config = function(opts)
+    --         require("extensions/message").setup(opts)
+    --     end,
+    -- },
 }
