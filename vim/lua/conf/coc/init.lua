@@ -193,6 +193,7 @@ M.setup = function(opts)
         "coc-prettier",
         "coc-sh",
         "coc-lists",
+        "coc-clangd",
         "@yaegassy/coc-tailwindcss3",
     }
 
