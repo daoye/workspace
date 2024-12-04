@@ -1,12 +1,5 @@
 return {
     {
-        "williamboman/mason.nvim",
-        cond = function()
-            return not vim.g.usecoc
-        end,
-        config = true,
-    },
-    {
         "williamboman/mason-lspconfig.nvim",
         cond = function()
             return not vim.g.usecoc

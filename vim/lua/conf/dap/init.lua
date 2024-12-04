@@ -35,6 +35,10 @@ M.setup = function()
     -- adapters
     require("conf.dap.adapters.js").setup()
     require("conf.dap.adapters.cs").setup()
+    require("conf.dap.adapters.cpp").setup()
+
+    -- load .vscode/launch.json to override default configurations
+    require("conf.dap.adapters.vscode").setup()
 end
 
 return M

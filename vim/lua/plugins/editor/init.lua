@@ -110,6 +110,7 @@ function M.telescope(builtin, opts)
 end
 
 return {
+    'Joakker/lua-json5',
     -- theme
     {
         "catppuccin/nvim",
@@ -191,6 +192,20 @@ return {
                 desc = "Show all messages",
             }
         }
+    },
+
+    -- package manager
+    {
+        "williamboman/mason.nvim",
+        dependencies = {
+            {
+                "Joakker/lua-json5",
+                build = "./install.sh"
+            }
+        },
+        config = function()
+            -- require('dap.ext.vscode').json_decode = require('json5').parse
+        end,
     },
 
     -- file explorer
