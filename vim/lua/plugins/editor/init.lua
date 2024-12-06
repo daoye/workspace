@@ -110,7 +110,6 @@ function M.telescope(builtin, opts)
 end
 
 return {
-    'Joakker/lua-json5',
     -- theme
     {
         "catppuccin/nvim",
@@ -204,7 +203,7 @@ return {
             }
         },
         config = function()
-            -- require('dap.ext.vscode').json_decode = require('json5').parse
+            require('dap.ext.vscode').json_decode = require('json5').parse
         end,
     },
 

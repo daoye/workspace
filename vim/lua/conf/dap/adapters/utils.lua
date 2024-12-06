@@ -1,3 +1,5 @@
+local json = require("json5")
+
 local M = {}
 
 M.merge_launch_json = function(configurations)
@@ -16,7 +18,7 @@ M.merge_launch_json = function(configurations)
         local content = file:read("*a")
         file:close()
         if content and #content > 0 then
-            local parsed_config, _, err = vim.fn.json_decode(content)
+            local parsed_config, _, err = json.parse(content)
             if parsed_config then
                 existing_config = parsed_config
             elseif err then
@@ -50,12 +52,16 @@ M.merge_launch_json = function(configurations)
         return false
     end
 
+
+    local changed = false
+
     -- merge configurations
     existing_config.configurations = existing_config.configurations or {}
     local new_configurations = configurations or {}
     for _, new_config in ipairs(new_configurations) do
         if not configuration_exists(new_config) then
             table.insert(existing_config.configurations, new_config)
+            changed = true
         end
     end
 
@@ -72,14 +78,20 @@ M.merge_launch_json = function(configurations)
     for _, new_config in ipairs(inputs) do
         if not input_exists(new_config) then
             table.insert(existing_config.inputs, new_config)
+            changed = true
         end
+    end
+
+
+    if not changed then
+        return
     end
 
 
     -- save to launch.json
     local updated_content = vim.fn.json_encode(existing_config)
     local write_file = io.open(launch_json_path, "w")
-    if write_file then
+    if write_file and updated_content then
         write_file:write(updated_content)
         write_file:close()
         print("launch.json updated at " .. launch_json_path)
