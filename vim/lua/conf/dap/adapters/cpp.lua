@@ -8,7 +8,11 @@ M.setup = function()
     dap.adapters['cppdbg'] = {
         id = 'cppdbg',
         type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7'
+        command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7',
+        attach = {
+            pidProperty = "processId",
+            pidSelect = "ask"
+        },
     }
 
     local configurations = {
@@ -17,11 +21,23 @@ M.setup = function()
             type = "cppdbg",
             request = "launch",
             cwd = '${workspaceFolder}',
+            -- program = "${workspaceFolder}/app.exe",
             -- program = function()
             --     return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
             -- end,
             stopAtEntry = true,
             program = "${input:inputProgram}",
+            osx = {
+                MIMode = "lldb"
+            },
+            setupCommands = {
+                {
+                    text = '-enable-pretty-printing',
+                    description = 'enable pretty printing',
+                    ignoreFailures = false
+                },
+            },
+
         },
         {
             name = 'Attach to gdbserver :6565',
@@ -31,7 +47,17 @@ M.setup = function()
             miDebuggerServerAddress = 'localhost:6565',
             miDebuggerPath = '/usr/local/bin/gdb',
             cwd = '${workspaceFolder}',
-            processId = "${pick_process}"
+            osx = {
+                MIMode = "lldb"
+            },
+            setupCommands = {
+                {
+                    text = '-enable-pretty-printing',
+                    description = 'enable pretty printing',
+                    ignoreFailures = false
+                },
+            },
+            -- processId = "${pick_process}"
             -- processId = require("dap.utils").pick_process,
         },
     }
