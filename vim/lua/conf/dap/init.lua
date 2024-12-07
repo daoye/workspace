@@ -1,4 +1,7 @@
+local utils = require("utils")
+
 local M = {}
+
 
 M.setup = function()
     local dap = require("dap")
@@ -6,10 +9,18 @@ M.setup = function()
     dap.set_log_level("TRACE")
 
     dap.listeners.after.event_initialized["aprilzz"] = function(session)
-        -- if not session.initialized then
-        -- 	return;
-        -- end
         dap.repl.open({ height = 10 }, "belowright split")
+    end
+
+
+    dap.listeners.on_config["aprilzz"] = function(config)
+        local cfg = vim.fn.deepcopy(config)
+
+        local task = cfg["preLaunchTask"]
+        if task then
+            utils.run_command(string.gsub(task, '${workspaceFolder}', vim.fn.getcwd()))
+        end
+        return config
     end
 
     -- dap signs
