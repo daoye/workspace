@@ -195,6 +195,7 @@ M.setup = function(opts)
         "coc-lists",
         "coc-clangd",
         "@yaegassy/coc-tailwindcss3",
+        "@yaegassy/coc-volar",
     }
 
     vim.api.nvim_create_autocmd("User", {
