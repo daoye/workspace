@@ -62,7 +62,13 @@ M.setup = function()
         },
     }
 
-    utils.merge_launch_json(configurations)
+    -- for _, name in ipairs({ "c", "cpp", "rust" }) do
+    --     dap.configurations[name] = configurations
+    -- end
+
+    if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
+        utils.merge_launch_json(configurations)
+    end
 end
 
 return M
