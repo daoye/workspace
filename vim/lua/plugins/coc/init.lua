@@ -5,6 +5,12 @@ return {
             return vim.g.usecoc
         end,
         dependencies = {
+            {
+                "Decodetalkers/csharpls-extended-lsp.nvim",
+                cond = function()
+                    return vim.g.usecoc
+                end,
+            },
         },
         branch = "release",
         build = "npm ci",
