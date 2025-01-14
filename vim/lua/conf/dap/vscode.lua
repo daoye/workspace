@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup = function()
+M.load_config = function()
     local dir = vim.fn.getcwd() .. ".vscode/launch.json"
     require('dap.ext.vscode').load_launchjs(dir, { cppdbg = { 'c', 'cpp', 'rust' }, python = { 'python' } })
 end

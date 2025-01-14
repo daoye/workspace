@@ -1,8 +1,13 @@
-local json = require("json5")
+local utils = require("utils")
 
 local M = {}
 
-M.merge_launch_json = function(configurations)
+
+M.get_vscode_cfg_path = function()
+    return vim.fn.getcwd() .. "/.vscode/launch.json"
+end
+
+M.save_launch_json = function(configurations)
     local launch_json_path = vim.fn.getcwd() .. "/.vscode/launch.json"
 
     -- make directory
@@ -18,7 +23,7 @@ M.merge_launch_json = function(configurations)
         local content = file:read("*a")
         file:close()
         if content and #content > 0 then
-            local parsed_config, _, err = json.parse(content)
+            local parsed_config, _, err = vim.fn.json_decode(content)
             if parsed_config then
                 existing_config = parsed_config
             elseif err then
@@ -89,7 +94,7 @@ M.merge_launch_json = function(configurations)
 
 
     -- save to launch.json
-    local updated_content = vim.fn.json_encode(existing_config)
+    local updated_content = utils.json_encode(existing_config)
     local write_file = io.open(launch_json_path, "w")
     if write_file and updated_content then
         write_file:write(updated_content)

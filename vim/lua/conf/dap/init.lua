@@ -1,5 +1,10 @@
 local utils = require("utils")
 
+local adapter_js = require("conf.dap.adapters.js")
+local adapter_cs = require("conf.dap.adapters.cs")
+local adapter_cpp = require("conf.dap.adapters.cpp")
+local adapter_python = require("conf.dap.adapters.python")
+
 local M = {}
 
 
@@ -44,13 +49,19 @@ M.setup = function()
     end
 
     -- adapters
-    require("conf.dap.adapters.js").setup()
-    require("conf.dap.adapters.cs").setup()
-    require("conf.dap.adapters.cpp").setup()
-    require("conf.dap.adapters.python").setup()
+    adapter_js.setup()
+    adapter_cs.setup()
+    adapter_cpp.setup()
+    adapter_python.setup()
+end
 
-    -- load .vscode/launch.json to override default configurations
-    require("conf.dap.adapters.vscode").setup()
+M.vscode = function()
+    _ = adapter_js.vscode and adapter_js.vscode()
+    _ = adapter_cs.vscode and adapter_cs.vscode()
+    _ = adapter_cpp.vscode and adapter_cpp.vscode()
+    _ = adapter_python.vscode and adapter_python.vscode()
+
+    require("conf.dap.vscode").load_config()
 end
 
 return M

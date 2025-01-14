@@ -1,5 +1,6 @@
 local dap = require("dap")
-local utils = require("conf.dap.adapters.utils")
+local dap_ext = require("dap.ext.vscode")
+local utils = require("conf.dap.utils")
 local M = {}
 
 local find_python = function()
@@ -62,20 +63,60 @@ M.setup = function()
             name = "Launch file",
 
             -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-
             program = "${file}",
             python = find_python(),
-            -- pythonPath = function()
-            --     return find_python()
-            -- end,
             args = {},
             cwd = "${workspaceFolder}",
         },
     }
 
-    if vim.bo.filetype == "python" then
-        utils.merge_launch_json(configurations)
+    local vscode_configs = dap_ext.getconfigs(utils.get_vscode_cfg_path())
+
+    local name = 'python'
+    dap.configurations[name] = dap.configurations[name] or {}
+
+    for _, cfg in ipairs(configurations) do
+        local exists = false
+
+        if vscode_configs then
+            for _, v in ipairs(vscode_configs) do
+                if v['type'] == 'python' and v['name'] == cfg['name'] then
+                    exists = true
+                end
+            end
+        end
+
+        if not exists then
+            table.insert(dap.configurations[name], cfg)
+        end
     end
+end
+
+M.vscode = function()
+    local need = vim.bo.filetype == "python"
+    if not need then
+        return
+    end
+
+    local python_path = find_python()
+
+    local configurations = {
+        {
+            -- The first three options are required by nvim-dap
+            type = 'python', -- the type here established the link to the adapter definition: `dap.adapters.python`
+            request = 'launch',
+            name = "Launch file",
+
+            -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+            program = "${file}",
+            python = python_path,
+            args = {},
+            cwd = "${workspaceFolder}",
+        },
+    }
+
+    utils.save_launch_json(configurations)
 end
 
 return M

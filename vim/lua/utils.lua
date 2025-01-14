@@ -46,4 +46,26 @@ M.run_command = function(cmd)
     end
 end
 
+
+M.json_encode = function(data)
+    if type(data) ~= "table" then
+        vim.notify("Input data must be a table", vim.log.levels.ERROR)
+        return
+    end
+
+    local json = vim.fn.json_encode(data)
+    if not json then
+        vim.notify("Failed to serialize data to JSON", vim.log.levels.ERROR)
+        return
+    end
+
+    local formatted_json = vim.fn.system("echo " .. vim.fn.shellescape(json) .. " | jq .")
+    if vim.v.shell_error ~= 0 then
+        vim.notify("Failed to format JSON using jq", vim.log.levels.ERROR)
+        return
+    end
+
+    return formatted_json
+end
+
 return M

@@ -176,8 +176,8 @@ M.setup = function()
 
     dap.configurations.cs = {
         {
+            name = "Launch(cs)",
             type = "coreclr",
-            name = "Launch",
             request = "launch",
             cwd = "${workspaceFolder}",
             env = {
@@ -188,9 +188,9 @@ M.setup = function()
             end,
         },
         {
+            name = "Attach(cs)",
             type = "coreclr",
             request = "attach",
-            name = "Attach",
             cwd = "${workspaceFolder}",
             env = {
                 ASPNETCORE_ENVIRONMENT = "Development"

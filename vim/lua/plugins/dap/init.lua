@@ -25,6 +25,7 @@ return {
             { "<leader>dl", function() require("dap").run_last() end,                                                    desc = "Run Last" },
             { "<leader>dp", function() require("dap").pause() end,                                                       desc = "Pause" },
             { "<leader>ds", function() require("dap").session() end,                                                     desc = "Session" },
+            { "<leader><leader><leader>", function() require("conf.dap").vscode() end,                                                 desc = "Update .vscode/launch.json and load" },
         },
         config = function()
             require("conf.dap").setup()

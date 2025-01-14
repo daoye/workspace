@@ -17,16 +17,16 @@ M.setup = function()
     for _, language in ipairs({ "typescript", "javascript", "typescriptreact", "javascriptreact" }) do
         require("dap").configurations[language] = {
             {
+                name = "Launch(node)",
                 type = "pwa-node",
                 request = "launch",
-                name = "Launch",
                 program = "${file}",
                 cwd = "${workspaceFolder}",
             },
             {
+                name = "Attach(node)",
                 type = "pwa-node",
                 request = "attach",
-                name = "Attach",
                 processId = require("dap.utils").pick_process,
                 cwd = "${workspaceFolder}",
             },

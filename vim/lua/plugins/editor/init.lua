@@ -196,15 +196,8 @@ return {
     -- package manager
     {
         "williamboman/mason.nvim",
-        dependencies = {
-            {
-                "Joakker/lua-json5",
-                build = "./install.sh"
-            }
-        },
         config = function()
             require("mason").setup()
-            require('dap.ext.vscode').json_decode = require('json5').parse
         end,
     },
 
