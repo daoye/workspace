@@ -196,7 +196,8 @@ M.setup = function(opts)
         "coc-clangd",
         "@yaegassy/coc-tailwindcss3",
         "@yaegassy/coc-volar",
-        "@yaegassy/coc-pylsp"
+        "@yaegassy/coc-pylsp",
+        "coc-rust-analyzer"
     }
 
     vim.api.nvim_create_autocmd("User", {
