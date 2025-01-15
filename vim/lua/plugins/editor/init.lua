@@ -711,6 +711,10 @@ return {
             },
         },
     },
+    {
+        "github/copilot.vim",
+        event = "VeryLazy",
+    }
     -- {
     --     "gelguy/wilder.nvim",
     --     event = "VeryLazy",
