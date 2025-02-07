@@ -459,6 +459,9 @@ return {
                     function()
                         return require('extensions/message').get_status_summary()
                     end,
+                    function()
+                        return require('conf.ai').get_status()
+                    end,
                     { "diff" },
                 },
                 lualine_y = {
@@ -544,7 +547,7 @@ return {
             options = {
                 ignore_blank_line = true,
                 custom_commentstring = function()
-                    if vim.bo.filetype == 'cs' then
+                    if vim.bo.filetype == 'cs' or vim.bo.filetype == 'c' then
                         return '// %s'
                     end
 
@@ -714,7 +717,60 @@ return {
     {
         "github/copilot.vim",
         event = "VeryLazy",
-    }
+        cond = function()
+            -- just codecompanion
+            return false
+        end
+    },
+    {
+        "olimorris/codecompanion.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            {
+                "saghen/blink.cmp",
+                version = '*',
+                opts = {
+                    keymap = {
+                        preset = 'none'
+                    },
+                    enabled = function()
+                        return vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
+                            and vim.bo.buftype ~= "prompt"
+                            and vim.b.completion ~= false
+                    end,
+                }
+            }
+        },
+        keys = {
+            {
+                "<leader>cc",
+                "<cmd>CodeCompanionChat Toggle<cr>",
+                desc = "Toggle AI chat",
+                mode = { "n" },
+            },
+            {
+                "<space>cc",
+                "<cmd>CodeCompanion<cr>",
+                desc = "[AI]Inline file editor",
+            },
+            {
+                "<leader>ca",
+                "<cmd>CodeCompanionChat Add<cr><esc>",
+                desc = "[AI]Add visually selected to chat",
+                mode = { "v" },
+            },
+            {
+                "<leader>fc",
+                "<cmd>CodeCompanionActions<cr>",
+                desc = "[AI]AI actions",
+                mode = { "n" },
+            },
+        },
+        config = function(_, opts)
+            require('conf.ai').setup(opts)
+        end
+    },
     -- {
     --     "gelguy/wilder.nvim",
     --     event = "VeryLazy",

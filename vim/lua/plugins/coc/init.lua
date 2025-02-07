@@ -13,9 +13,8 @@ return {
             },
         },
         branch = "release",
-        build = "npm ci",
         opts = {},
-        config = function(opts)
+        config = function(_, opts)
             require("conf.coc").setup(opts)
         end,
     },
